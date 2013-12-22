@@ -7,10 +7,10 @@ var VIEW_ANGLE = 45,
     FAR = 1000;
 
 var scene = new THREE.Scene();
-scene.fog = new THREE.Fog( 0x999999, 10, 30 );
+scene.fog = new THREE.Fog( 0x777777, 0, 30 );
 
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-var camera_offset = -10.0
+var camera_offset = -2.0
 camera.position.set(0, camera_offset, camera_offset / -2.0);
 camera.lookAt(scene.position);
 
@@ -34,6 +34,24 @@ scene.add( ambientLight );
 
 var light = getLight(5, 0, 5);
 scene.add( light );
+
+var goal1 = new THREE.ColladaLoader();
+goal1.load('models/Soccer_Goal.dae', function (result) {
+  result.scene.scale.set(result.scene.scale.x / 4, result.scene.scale.y / 4, result.scene.scale.z / 4);
+  result.scene.position.x += 7.2;
+  result.scene.position.y += 1;
+  result.scene.rotation.z += -90 * Math.PI / 180;
+  scene.add(result.scene);
+});
+
+var goal2 = new THREE.ColladaLoader();
+goal2.load('models/Soccer_Goal.dae', function (result) {
+  result.scene.scale.set(result.scene.scale.x / 4, result.scene.scale.y / 4, result.scene.scale.z / 4);
+  //result.scene.position.x -= 7.2;
+  result.scene.position.y -= 1;
+  result.scene.rotation.z -= -90 * Math.PI / 180;
+  scene.add(result.scene);
+});
 
 window.addEventListener('resize', function(e) {
   renderer.setSize( getViewportWidth(), getViewportHeight() );
