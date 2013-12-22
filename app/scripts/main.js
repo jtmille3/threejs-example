@@ -10,7 +10,7 @@ var scene = new THREE.Scene();
 scene.fog = new THREE.Fog( 0x999999, 10, 30 );
 
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-var camera_offset = -15.0
+var camera_offset = -10.0
 camera.position.set(0, camera_offset, camera_offset / -2.0);
 camera.lookAt(scene.position);
 
@@ -20,6 +20,7 @@ renderer.shadowMapSoft = true;
 // renderer.shadowMapDebug = true;
 renderer.shadowMapAutoUpdate = true;
 renderer.setSize(getViewportWidth(), getViewportHeight());
+renderer.setClearColor(0xFFFFFF, 1);
 document.body.appendChild(renderer.domElement);
 
 var field = getField();
