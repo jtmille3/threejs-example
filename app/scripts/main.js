@@ -1,31 +1,27 @@
-var WIDTH = document.documentElement.clientWidth,
-    HEIGHT = document.documentElement.clientHeight;
-
 var projector = new THREE.Projector();
 
 // set some camera attributes
 var VIEW_ANGLE = 45,
-    ASPECT = WIDTH / HEIGHT,
+    ASPECT = getViewportWidth() / getViewportHeight(),
     NEAR = 0.1,
-    FAR = 100;
-
+    FAR = 1000;
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+camera.position.set(0, -10, 5);
+camera.lookAt(scene.position);
+// camera.position.y -= 20;
 
 var renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(getViewportWidth(), getViewportHeight());
 document.body.appendChild(renderer.domElement);
 
-var geometry = new THREE.SphereGeometry(0.5,30,30);
+var field = getField();
+scene.add( field );
 
-var texture = THREE.ImageUtils.loadTexture('images/soccer2.jpg');
-texture.anisotropy = renderer.getMaxAnisotropy();
-
-var material = new THREE.MeshLambertMaterial({map: texture});
-
-var sphere = new THREE.Mesh(geometry, material);
-scene.add(sphere);
+var ball = getBall();
+ball.position.z += 0.5;
+scene.add( ball );
 
 // add subtle blue ambient lighting
 var ambientLight = new THREE.AmbientLight(0x9999EE);
@@ -36,56 +32,67 @@ var directionalLight = new THREE.DirectionalLight(0x999999);
 directionalLight.position.set(ASPECT, 1, 2).normalize();
 scene.add(directionalLight);
 
-camera.position.z = 10;
-
-control = new THREE.TransformControls( camera, renderer.domElement );
-control.addEventListener( 'change', render );
-control.attach( sphere );
-scene.add( control );
-
-var grid = new THREE.GridHelper( 10, 1 );
-grid.rotation.x += 0.5;
-grid.rotation.y += 1.0;
-scene.add( grid );
-
 window.addEventListener('resize', function(e) {
-	camera.aspect = document.documentElement.clientWidth / document.documentElement.clientHeight;
+	camera.aspect = getViewportWidth() / getViewportHeight();
 	camera.updateProjectionMatrix();
 
-	renderer.setSize( document.documentElement.clientWidth, document.documentElement.clientHeight );
+	renderer.setSize( getViewportWidth(), getViewportHeight() );
 
 	render();
 });
 
-window.addEventListener( 'keydown', function ( event ) {
-    //console.log(event.which);
-    switch ( event.keyCode ) {
-      case 81: // Q
-        control.setSpace( control.space == "local" ? "world" : "local" );
-        break;
-      case 87: // W
-        control.setMode( "translate" );
-        break;
-      case 69: // E
-        control.setMode( "rotate" );
-        break;
-      case 82: // R
-        control.setMode( "scale" );
-        break;
-	case 187:
-	case 107: // +,=,num+
-		control.setSize( control.size + 0.1 );
-		break;
-	case 189:
-	case 10: // -,_,num-
-		control.setSize( Math.max(control.size - 0.1, 0.1 ) );
-		break;
-    }            
-});
+function mouseMove(e){
+  mouse2D.x = ( (e.pageX-canvas.offsetParent.offsetLeft) / canvas.clientWidth ) * 2 - 1;
+  mouse2D.y = - ( (e.pageY-canvas.offsetParent.offsetTop) / canvas.clientHeight ) * 2 + 1;
+
+  if (selected) {
+    var ray = projector.pickingRay(mouse2D, PGL._camera).ray;
+    var targetPos = ray.direction.clone().addSelf(ray.origin);
+    targetPos.subSelf(_offset);
+
+    obj.position.x = initPos.x + targetPos.x;
+    obj.position.y = initPos.y + targetPos.y;
+  }
+}
 
 function render() {
-	control.update();
 	renderer.render( scene, camera );
 }
 
-render();
+function getViewportHeight() {
+  return window.innerHeight;
+}
+
+function getViewportWidth() {
+  return window.innerWidth;
+}
+
+window.onload = function() {
+  render();
+}
+
+function getBall() {
+  var geometry = new THREE.SphereGeometry(0.5,30,30);
+
+  var texture = THREE.ImageUtils.loadTexture('images/ball.jpg');
+  texture.anisotropy = renderer.getMaxAnisotropy();
+
+  var material = new THREE.MeshPhongMaterial({map: texture});
+
+  var sphere = new THREE.Mesh(geometry, material);
+
+  return sphere;
+}
+
+function getField() {
+  var geometry = new THREE.PlaneGeometry(10,10);
+
+  // var texture = THREE.ImageUtils.loadTexture('images/ball.jpg');
+  // texture.anisotropy = renderer.getMaxAnisotropy();
+
+  var material = new THREE.MeshBasicMaterial({color: '#006600'});
+
+  var plane = new THREE.Mesh(geometry, material);
+
+  return plane;
+}
