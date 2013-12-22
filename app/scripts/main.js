@@ -7,14 +7,22 @@ var VIEW_ANGLE = 45,
     FAR = 1000;
 
 var scene = new THREE.Scene();
+scene.fog = new THREE.Fog( 0x222222, 5, 15 );
+
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 var camera_offset = -8.0
 camera.position.set(0, camera_offset, camera_offset / -2.0);
 camera.lookAt(scene.position);
 
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  clearColor: 0xffffff, 
+  clearAlpha: 1
+});
+
 renderer.shadowMapEnabled = true;
 renderer.shadowMapSoft = true;
+renderer.autoClear = false;
 renderer.setSize(getViewportWidth(), getViewportHeight());
 document.body.appendChild(renderer.domElement);
 
@@ -24,18 +32,11 @@ scene.add( field );
 var ball = getBall();
 scene.add( ball );
 
-// add subtle blue ambient lighting
 var ambientLight = new THREE.AmbientLight(0x404040);
-scene.add(ambientLight);
+scene.add( ambientLight );
 
-var light_x = 5, light_y = 0, light_z = 5;
-
-var directionalLight = getDirectionalLight(light_x, light_y, light_z);
-scene.add(directionalLight);
-
-var light = getLight();
-light.position.set(light_x, light_y, light_z);
-scene.add(light);
+var light = getLight(5, 0, 5);
+scene.add( light );
 
 window.addEventListener('resize', function(e) {
 	camera.aspect = getViewportWidth() / getViewportHeight();
@@ -46,10 +47,6 @@ window.addEventListener('resize', function(e) {
 	render();
 });
 
-function render() {
-	renderer.render( scene, camera );
-}
-
 function getViewportHeight() {
   return window.innerHeight;
 }
@@ -58,18 +55,12 @@ function getViewportWidth() {
   return window.innerWidth;
 }
 
-window.onload = function() {
-  render();
+function render() {
+	renderer.render( scene, camera );
 }
 
-function getLight() {
-  var geometry = new THREE.SphereGeometry(0.2,30,30);
-
-  var material = new THREE.MeshBasicMaterial({color: 0xFFFF00});
-
-  var sphere = new THREE.Mesh(geometry, material);
-
-  return sphere;
+window.onload = function() {
+  render();
 }
 
 function getBall() {
@@ -111,23 +102,23 @@ function getField() {
   return object;
 }
 
-function getDirectionalLight(x, y, z) {
+function getLight(x, y, z) {
   // directional lighting
-  var directionalLight = new THREE.DirectionalLight(0xEEEEEE, 0.7);
-  directionalLight.target.position.copy( scene.position );
-  directionalLight.castShadow = true;
-  directionalLight.shadowDarkness = 0.7;
-  directionalLight.shadowCameraVisible = true;
+  var light = new THREE.DirectionalLight(0xEEEEEE, 0.7);
+  light.target.position.copy( scene.position );
+  light.castShadow = true;
+  light.shadowDarkness = 0.7;
+  light.shadowCameraVisible = true;
 
-  directionalLight.shadowCameraLeft = -5;
-  directionalLight.shadowCameraTop = -5;
-  directionalLight.shadowCameraRight = 5;
-  directionalLight.shadowCameraBottom = 5;
-  directionalLight.shadowCameraNear = 0.01;
-  directionalLight.shadowCameraFar = 100;
-  directionalLight.shadowBias = -.0001;
-  directionalLight.shadowMapWidth = directionalLight.shadowMapHeight = 2048;
+  light.shadowCameraLeft = -5;
+  light.shadowCameraTop = -5;
+  light.shadowCameraRight = 5;
+  light.shadowCameraBottom = 5;
+  light.shadowCameraNear = 0.01;
+  light.shadowCameraFar = 100;
+  light.shadowBias = -.0001;
+  light.shadowMapWidth = light.shadowMapHeight = 2048;
 
-  directionalLight.position.set(x, y, z);
-  return directionalLight;
+  light.position.set(x, y, z);
+  return light;
 }
