@@ -7,22 +7,18 @@ var VIEW_ANGLE = 45,
     FAR = 1000;
 
 var scene = new THREE.Scene();
-scene.fog = new THREE.Fog( 0x222222, 5, 15 );
+scene.fog = new THREE.Fog( 0x999999, 10, 30 );
 
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-var camera_offset = -8.0
+var camera_offset = -15.0
 camera.position.set(0, camera_offset, camera_offset / -2.0);
 camera.lookAt(scene.position);
 
-var renderer = new THREE.WebGLRenderer({
-  antialias: true,
-  clearColor: 0xffffff, 
-  clearAlpha: 1
-});
-
+var renderer = new THREE.WebGLRenderer();
 renderer.shadowMapEnabled = true;
 renderer.shadowMapSoft = true;
-renderer.autoClear = false;
+// renderer.shadowMapDebug = true;
+renderer.shadowMapAutoUpdate = true;
 renderer.setSize(getViewportWidth(), getViewportHeight());
 document.body.appendChild(renderer.domElement);
 
@@ -39,10 +35,10 @@ var light = getLight(5, 0, 5);
 scene.add( light );
 
 window.addEventListener('resize', function(e) {
+  renderer.setSize( getViewportWidth(), getViewportHeight() );
+  
 	camera.aspect = getViewportWidth() / getViewportHeight();
 	camera.updateProjectionMatrix();
-
-	renderer.setSize( getViewportWidth(), getViewportHeight() );
 
 	render();
 });
@@ -108,7 +104,7 @@ function getLight(x, y, z) {
   light.target.position.copy( scene.position );
   light.castShadow = true;
   light.shadowDarkness = 0.7;
-  light.shadowCameraVisible = true;
+  light.shadowCameraVisible = false; // will show the wire frame
 
   light.shadowCameraLeft = -5;
   light.shadowCameraTop = -5;
