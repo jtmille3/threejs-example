@@ -10,7 +10,7 @@ var scene = new THREE.Scene();
 scene.fog = new THREE.Fog( 0x777777, 0, 30 );
 
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-var camera_offset = -4.0;
+var camera_offset = -8.0;
 camera.position.set(0, camera_offset, camera_offset / -2.0);
 camera.lookAt(scene.position);
 
@@ -40,24 +40,22 @@ scene.add( light );
 
 
 var colladaLoader = new THREE.ColladaLoader();
-/*
-colladaLoader.load('models/Soccer_Goal.dae', function (collada) {
-  collada.scene.scale.set(collada.scene.scale.x / 4, collada.scene.scale.y / 4, collada.scene.scale.z / 4);
-  collada.scene.position.x += 7.2;
-  collada.scene.position.y += 1;
-  collada.scene.rotation.z += -90 * Math.PI / 180;
-  scene.add(collada.scene);
-  render();
-});
-*/
-
 colladaLoader.load('models/goal.dae', function (collada) {
-  var object = collada.scene;
-  object.scale.set(object.scale.x / 4, object.scale.y / 4, object.scale.z / 4);
-  //object.position.x += 2;
-  //object.position.y -= 1;
-  //object.rotation.z -= 90 * Math.PI / 180;
-  scene.add(object);
+  var whiteGoal = collada.scene;
+  var darkGoal = collada.scene.clone();
+
+  whiteGoal.scale.set(whiteGoal.scale.x / 6, whiteGoal.scale.y / 6, whiteGoal.scale.z / 6);
+  whiteGoal.position.x += 7.6;
+  whiteGoal.position.y += 0.62;
+  whiteGoal.rotation.z -= 180 * Math.PI / 180;
+  scene.add(whiteGoal);
+
+  darkGoal.scale.set(darkGoal.scale.x / 6, darkGoal.scale.y / 6, darkGoal.scale.z / 6);
+  darkGoal.position.x -= 7.6;
+  darkGoal.position.y -= 0.62;
+  // darkGoal.rotation.z -= 180 * Math.PI / 180;
+  scene.add(darkGoal);
+
   render();
 });
 
