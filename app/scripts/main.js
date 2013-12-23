@@ -1,3 +1,6 @@
+var stats = new Stats();
+stats.setMode(0); // 0: fps, 1: ms
+
 var projector = new THREE.Projector();
 
 // set some camera attributes
@@ -10,6 +13,7 @@ var scene = new THREE.Scene();
 scene.fog = new THREE.Fog( 0x777777, 0, 30 );
 
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+camera.up = new THREE.Vector3( 0, 0, 1 );
 var camera_offset = -8.0;
 camera.position.set(0, camera_offset, camera_offset / -2.0);
 camera.lookAt(scene.position);
@@ -20,7 +24,7 @@ renderer.shadowMapSoft = true;
 // renderer.shadowMapDebug = true;
 renderer.shadowMapAutoUpdate = true;
 renderer.setSize(getViewportWidth(), getViewportHeight());
-renderer.setClearColor(0xFFFFFF, 1);
+renderer.setClearColor(0x595959, 1);
 renderer.gammaInput = true;
 renderer.gammaOutput = true;
 renderer.physicallyBasedShading = true;
@@ -37,7 +41,6 @@ scene.add( ambientLight );
 
 var light = getLight(5, 0, 5);
 scene.add( light );
-
 
 var colladaLoader = new THREE.ColladaLoader();
 colladaLoader.load('models/goal.dae', function (collada) {
@@ -59,18 +62,6 @@ colladaLoader.load('models/goal.dae', function (collada) {
   render();
 });
 
-/*
-var objectLoader = new THREE.ObjectLoader();
-objectLoader.load('models/gol.js', function(geometry) {
-  geometry.scale.set(geometry.scale.x / 4, geometry.scale.y / 4, geometry.scale.z / 4);
-  // geometry.position.y -= 5;
-  var material = new THREE.MeshBasicMaterial( { color: 0x0000ff, transparent: true, opacity: 0.5 } );
-  var mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
-  render();
-});
-*/
-
 window.addEventListener('resize', function(e) {
   renderer.setSize( getViewportWidth(), getViewportHeight() );
   
@@ -88,16 +79,36 @@ function getViewportWidth() {
   return window.innerWidth;
 }
 
+function animate() {
+  requestAnimationFrame( animate );
+  render();
+}
+
 function render() {
+  var timer = Date.now() * 0.0005;
+
+  camera.position.x = Math.cos( timer ) * 10;
+  camera.position.z = 2;
+  camera.position.y = Math.sin( timer ) * 10;
+
+  camera.lookAt( scene.position );
+
+  stats.update();
 	renderer.render( scene, camera );
 }
 
 window.onload = function() {
-  render();
+  // Align top-left
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.left = '0px';
+  stats.domElement.style.top = '0px';
+
+  document.body.appendChild( stats.domElement );
+  animate();
 }
 
 function getBall() {
-  var geometry = new THREE.SphereGeometry(0.1,30,30);
+  var geometry = new THREE.SphereGeometry(0.05,30,30);
 
   var texture = THREE.ImageUtils.loadTexture('images/ball.jpg');
   texture.anisotropy = renderer.getMaxAnisotropy();
@@ -106,7 +117,7 @@ function getBall() {
 
   var object = new THREE.Mesh(geometry, material);
 
-  object.position.z += 0.1;
+  object.position.z += 0.05;
   object.castShadow = true;
   object.receiveShadow = false;
 
