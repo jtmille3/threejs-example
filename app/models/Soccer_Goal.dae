@@ -890,7 +890,7 @@
                             <color>0.9725490 0.9725490 1.0000000 1.0000000</color>
                         </transparent>
                         <transparency>
-                            <float>1.0000000</float>
+                            <float>0.3000000</float>
                         </transparency>
                     </constant>
                 </technique>
@@ -926,7 +926,7 @@
                             <color>0.0000000 0.0000000 0.0000000 1.0000000</color>
                         </transparent>
                         <transparency>
-                            <float>1.0000000</float>
+                            <float>0.3000000</float>
                         </transparency>
                     </constant>
                 </technique>

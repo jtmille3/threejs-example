@@ -10,7 +10,7 @@ var scene = new THREE.Scene();
 scene.fog = new THREE.Fog( 0x777777, 0, 30 );
 
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-var camera_offset = -2.0
+var camera_offset = -2.0;
 camera.position.set(0, camera_offset, camera_offset / -2.0);
 camera.lookAt(scene.position);
 
@@ -35,22 +35,27 @@ scene.add( ambientLight );
 var light = getLight(5, 0, 5);
 scene.add( light );
 
+/*
 var goal1 = new THREE.ColladaLoader();
-goal1.load('models/Soccer_Goal.dae', function (result) {
-  result.scene.scale.set(result.scene.scale.x / 4, result.scene.scale.y / 4, result.scene.scale.z / 4);
-  result.scene.position.x += 7.2;
-  result.scene.position.y += 1;
-  result.scene.rotation.z += -90 * Math.PI / 180;
-  scene.add(result.scene);
+goal1.load('models/Soccer_Goal.dae', function (collada) {
+  collada.scene.scale.set(collada.scene.scale.x / 4, collada.scene.scale.y / 4, collada.scene.scale.z / 4);
+  collada.scene.position.x += 7.2;
+  collada.scene.position.y += 1;
+  collada.scene.rotation.z += -90 * Math.PI / 180;
+  scene.add(collada.scene);
+  render();
 });
+*/
 
 var goal2 = new THREE.ColladaLoader();
-goal2.load('models/Soccer_Goal.dae', function (result) {
-  result.scene.scale.set(result.scene.scale.x / 4, result.scene.scale.y / 4, result.scene.scale.z / 4);
-  //result.scene.position.x -= 7.2;
-  result.scene.position.y -= 1;
-  result.scene.rotation.z -= -90 * Math.PI / 180;
-  scene.add(result.scene);
+goal2.load('models/goal.dae', function (collada) {
+  var object = collada.scene;
+  object.scale.set(object.scale.x / 4, object.scale.y / 4, object.scale.z / 4);
+  //object.position.x -= 7.2;
+  //object.position.y -= 1;
+  object.rotation.z -= 90 * Math.PI / 180;
+  scene.add(object);
+  render();
 });
 
 window.addEventListener('resize', function(e) {
