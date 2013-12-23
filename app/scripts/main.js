@@ -10,7 +10,7 @@ var scene = new THREE.Scene();
 scene.fog = new THREE.Fog( 0x777777, 0, 30 );
 
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-var camera_offset = -2.0;
+var camera_offset = -4.0;
 camera.position.set(0, camera_offset, camera_offset / -2.0);
 camera.lookAt(scene.position);
 
@@ -21,6 +21,9 @@ renderer.shadowMapSoft = true;
 renderer.shadowMapAutoUpdate = true;
 renderer.setSize(getViewportWidth(), getViewportHeight());
 renderer.setClearColor(0xFFFFFF, 1);
+renderer.gammaInput = true;
+renderer.gammaOutput = true;
+renderer.physicallyBasedShading = true;
 document.body.appendChild(renderer.domElement);
 
 var field = getField();
@@ -35,9 +38,10 @@ scene.add( ambientLight );
 var light = getLight(5, 0, 5);
 scene.add( light );
 
+
+var colladaLoader = new THREE.ColladaLoader();
 /*
-var goal1 = new THREE.ColladaLoader();
-goal1.load('models/Soccer_Goal.dae', function (collada) {
+colladaLoader.load('models/Soccer_Goal.dae', function (collada) {
   collada.scene.scale.set(collada.scene.scale.x / 4, collada.scene.scale.y / 4, collada.scene.scale.z / 4);
   collada.scene.position.x += 7.2;
   collada.scene.position.y += 1;
@@ -47,16 +51,27 @@ goal1.load('models/Soccer_Goal.dae', function (collada) {
 });
 */
 
-var goal2 = new THREE.ColladaLoader();
-goal2.load('models/goal.dae', function (collada) {
+colladaLoader.load('models/goal.dae', function (collada) {
   var object = collada.scene;
   object.scale.set(object.scale.x / 4, object.scale.y / 4, object.scale.z / 4);
-  //object.position.x -= 7.2;
+  //object.position.x += 2;
   //object.position.y -= 1;
-  object.rotation.z -= 90 * Math.PI / 180;
+  //object.rotation.z -= 90 * Math.PI / 180;
   scene.add(object);
   render();
 });
+
+/*
+var objectLoader = new THREE.ObjectLoader();
+objectLoader.load('models/gol.js', function(geometry) {
+  geometry.scale.set(geometry.scale.x / 4, geometry.scale.y / 4, geometry.scale.z / 4);
+  // geometry.position.y -= 5;
+  var material = new THREE.MeshBasicMaterial( { color: 0x0000ff, transparent: true, opacity: 0.5 } );
+  var mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+  render();
+});
+*/
 
 window.addEventListener('resize', function(e) {
   renderer.setSize( getViewportWidth(), getViewportHeight() );
