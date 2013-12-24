@@ -43,8 +43,6 @@ function init() {
 
   // Materials
   var groundMaterial = new CANNON.Material("groundMaterial");
-
-
   var groundContactMaterial = new CANNON.ContactMaterial(groundMaterial, 
                                                     groundMaterial,
                                                     1.0, // friction coefficient
@@ -65,11 +63,11 @@ function init() {
   ball = getBall();
   scene.add( ball );
 
-  var mass = 5, radius = 0.05;
+  var mass = 1, radius = 0.05;
   var sphereShape = new CANNON.Sphere(radius); // Step 1
   sphereBody = new CANNON.RigidBody(mass, sphereShape, groundMaterial); // Step 2
   sphereBody.position.set(0,0,1 /*0.05*/);
-  sphereBody.velocity.set(1,0,0);
+  sphereBody.velocity.set(2,0,0);
   sphereBody.linearDamping = 0.5;
   world.add(sphereBody); // Step 3
 
