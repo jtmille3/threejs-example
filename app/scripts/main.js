@@ -45,19 +45,19 @@ function init() {
   var groundMaterial = new CANNON.Material("groundMaterial");
 
 
-  var ground_ground_cm = new CANNON.ContactMaterial(groundMaterial, 
+  var groundContactMaterial = new CANNON.ContactMaterial(groundMaterial, 
                                                     groundMaterial,
                                                     1.0, // friction coefficient
                                                     0.7  // restitution
                                                     );
   // Adjust constraint equation parameters for ground/ground contact
-  ground_ground_cm.contactEquationStiffness = 1e8;
-  ground_ground_cm.contactEquationRegularizationTime = 5;
-  ground_ground_cm.frictionEquationStiffness = 1e8;
-  ground_ground_cm.frictionEquationRegularizationTime = 5;
+  groundContactMaterial.contactEquationStiffness = 1e8;
+  groundContactMaterial.contactEquationRegularizationTime = 5;
+  groundContactMaterial.frictionEquationStiffness = 1e8;
+  groundContactMaterial.frictionEquationRegularizationTime = 5;
 
   // Add contact material to the world
-  world.addContactMaterial(ground_ground_cm);
+  world.addContactMaterial(groundContactMaterial);
 
   var field = getField(groundMaterial);
   scene.add( field );
