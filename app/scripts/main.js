@@ -14,9 +14,6 @@ scene.fog = new THREE.Fog( 0x777777, 0, 30 );
 
 var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 camera.up = new THREE.Vector3( 0, 0, 1 );
-var camera_offset = -8.0;
-camera.position.set(0, camera_offset, camera_offset / -2.0);
-camera.lookAt(scene.position);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.shadowMapEnabled = true;
@@ -88,7 +85,7 @@ function render() {
   var timer = Date.now() * 0.0005;
 
   camera.position.x = Math.cos( timer ) * 10;
-  camera.position.z = 2;
+  camera.position.z = 5;
   camera.position.y = Math.sin( timer ) * 10;
 
   camera.lookAt( scene.position );
