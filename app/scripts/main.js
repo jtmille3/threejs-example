@@ -1,72 +1,103 @@
-var stats = new Stats();
-stats.setMode(0); // 0: fps, 1: ms
+if ( ! Detector.webgl ) {
+  Detector.addGetWebGLMessage();
+} else {
+  init();
+}
 
-var projector = new THREE.Projector();
+var clock, stats, scene, camera, renderer, world, ball, sphereBody;
 
-// set some camera attributes
-var VIEW_ANGLE = 45,
-    ASPECT = getViewportWidth() / getViewportHeight(),
-    NEAR = 0.1,
-    FAR = 1000;
+function init() {
+  clock = new THREE.Clock(true);
 
-var scene = new THREE.Scene();
-scene.fog = new THREE.Fog( 0x777777, 0, 30 );
+  stats = new Stats();
+  stats.setMode(0); // 0: fps, 1: ms
 
-var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-camera.up = new THREE.Vector3( 0, 0, 1 );
+  world = new CANNON.World();
+  world.gravity.set(0,0,-9.82);
+  world.broadphase = new CANNON.NaiveBroadphase();
+  world.solver.iterations = 10;
 
-var renderer = new THREE.WebGLRenderer();
-renderer.shadowMapEnabled = true;
-renderer.shadowMapSoft = true;
-// renderer.shadowMapDebug = true;
-renderer.shadowMapAutoUpdate = true;
-renderer.setSize(getViewportWidth(), getViewportHeight());
-renderer.setClearColor(0x595959, 1);
-renderer.gammaInput = true;
-renderer.gammaOutput = true;
-renderer.physicallyBasedShading = true;
-document.body.appendChild(renderer.domElement);
+  var projector = new THREE.Projector();
 
-var field = getField();
-scene.add( field );
+  // set some camera attributes
+  var VIEW_ANGLE = 45,
+      ASPECT = getViewportWidth() / getViewportHeight(),
+      NEAR = 0.1,
+      FAR = 1000;
 
-var ball = getBall();
-scene.add( ball );
+  scene = new THREE.Scene();
+  // scene.fog = new THREE.Fog( 0x777777, 0, 30 );
 
-var ambientLight = new THREE.AmbientLight(0x404040);
-scene.add( ambientLight );
+  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+  camera.up = new THREE.Vector3( 0, 0, 1 );
 
-var light = getLight(5, 0, 5);
-scene.add( light );
+  renderer = new THREE.WebGLRenderer();
+  /* this will slow down the rendering by half without a GPU */
+  // renderer.shadowMapEnabled = true;
+  // renderer.shadowMapSoft = true;
+  // renderer.shadowMapDebug = true;
+  // renderer.shadowMapAutoUpdate = true;
+  renderer.setSize(getViewportWidth(), getViewportHeight());
+  renderer.setClearColor(0x191919, 1);
+  document.body.appendChild(renderer.domElement);
 
-var colladaLoader = new THREE.ColladaLoader();
-colladaLoader.load('models/goal.dae', function (collada) {
-  var whiteGoal = collada.scene;
-  var darkGoal = collada.scene.clone();
+  var field = getField();
+  scene.add( field );
 
-  whiteGoal.scale.set(whiteGoal.scale.x / 6, whiteGoal.scale.y / 6, whiteGoal.scale.z / 6);
-  whiteGoal.position.x += 7.6;
-  whiteGoal.position.y += 0.62;
-  whiteGoal.rotation.z -= 180 * Math.PI / 180;
-  scene.add(whiteGoal);
+  ball = getBall();
+  scene.add( ball );
+  var mass = 1, radius = 0.05;
+  var sphereShape = new CANNON.Sphere(radius); // Step 1
+  sphereBody = new CANNON.RigidBody(mass,sphereShape); // Step 2
+  sphereBody.position.set(0,0,0.05);
+  sphereBody.velocity.set(2,0,0);
+  sphereBody.linearDamping = 0.01;
+  world.add(sphereBody); // Step 3
 
-  darkGoal.scale.set(darkGoal.scale.x / 6, darkGoal.scale.y / 6, darkGoal.scale.z / 6);
-  darkGoal.position.x -= 7.6;
-  darkGoal.position.y -= 0.62;
-  // darkGoal.rotation.z -= 180 * Math.PI / 180;
-  scene.add(darkGoal);
+  var ambientLight = new THREE.AmbientLight(0x404040);
+  scene.add( ambientLight );
 
-  render();
-});
+  var light = getLight(5, 0, 5);
+  scene.add( light );
 
-window.addEventListener('resize', function(e) {
-  renderer.setSize( getViewportWidth(), getViewportHeight() );
-  
-	camera.aspect = getViewportWidth() / getViewportHeight();
-	camera.updateProjectionMatrix();
+  var colladaLoader = new THREE.ColladaLoader();
+  colladaLoader.load('models/goal.dae', function (collada) {
+    var whiteGoal = collada.scene;
+    var darkGoal = collada.scene.clone();
 
-	render();
-});
+    whiteGoal.scale.set(whiteGoal.scale.x / 6, whiteGoal.scale.y / 6, whiteGoal.scale.z / 6);
+    whiteGoal.position.x += 7.6;
+    whiteGoal.position.y += 0.62;
+    whiteGoal.rotation.z -= 180 * Math.PI / 180;
+    scene.add(whiteGoal);
+
+    darkGoal.scale.set(darkGoal.scale.x / 6, darkGoal.scale.y / 6, darkGoal.scale.z / 6);
+    darkGoal.position.x -= 7.6;
+    darkGoal.position.y -= 0.62;
+    scene.add(darkGoal);
+
+    render();
+  });
+
+  window.addEventListener('resize', function(e) {
+    renderer.setSize( getViewportWidth(), getViewportHeight() );
+    
+  	camera.aspect = getViewportWidth() / getViewportHeight();
+  	camera.updateProjectionMatrix();
+
+  	render();
+  });
+
+  window.onload = function() {  
+    // Align top-left
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+
+    document.body.appendChild( stats.domElement );
+    animate();
+  }
+}
 
 function getViewportHeight() {
   return window.innerHeight;
@@ -78,30 +109,29 @@ function getViewportWidth() {
 
 function animate() {
   requestAnimationFrame( animate );
+
+  /* This will be a problem for laggy games */
+  var delta = clock.getDelta();
+  if(delta < 0.2) // smooth it out :P
+    world.step(delta);
+
   render();
+  stats.update();
 }
 
 function render() {
-  var timer = Date.now() * 0.0005;
+  var timer = Date.now() * 0.0001;
 
-  camera.position.x = Math.cos( timer ) * 10;
-  camera.position.z = 5;
-  camera.position.y = Math.sin( timer ) * 10;
+  camera.position.x = Math.cos( timer ) * 5;
+  camera.position.z = 2;
+  camera.position.y = Math.sin( timer ) * 5;
 
   camera.lookAt( scene.position );
 
-  stats.update();
-	renderer.render( scene, camera );
-}
+  sphereBody.position.copy(ball.position); // position
+  sphereBody.quaternion.copy(ball.quaternion); // for orientation
 
-window.onload = function() {
-  // Align top-left
-  stats.domElement.style.position = 'absolute';
-  stats.domElement.style.left = '0px';
-  stats.domElement.style.top = '0px';
-
-  document.body.appendChild( stats.domElement );
-  animate();
+  renderer.render( scene, camera );
 }
 
 function getBall() {
@@ -139,6 +169,10 @@ function getField() {
 
   object.castShadow = false;
   object.receiveShadow = true;
+
+  var groundShape = new CANNON.Plane();
+  var groundBody = new CANNON.RigidBody(0,groundShape);
+  world.add(groundBody);
 
   return object;
 }
