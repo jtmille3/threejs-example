@@ -41,17 +41,36 @@ function init() {
   renderer.setClearColor(0x191919, 1);
   document.body.appendChild(renderer.domElement);
 
-  var field = getField();
+  // Materials
+  var groundMaterial = new CANNON.Material("groundMaterial");
+
+
+  var ground_ground_cm = new CANNON.ContactMaterial(groundMaterial, 
+                                                    groundMaterial,
+                                                    0.7, // friction coefficient
+                                                    0.5  // restitution
+                                                    );
+  // Adjust constraint equation parameters for ground/ground contact
+  ground_ground_cm.contactEquationStiffness = 1e8;
+  ground_ground_cm.contactEquationRegularizationTime = 5;
+  ground_ground_cm.frictionEquationStiffness = 1e8;
+  ground_ground_cm.frictionEquationRegularizationTime = 5;
+
+  // Add contact material to the world
+  world.addContactMaterial(ground_ground_cm);
+
+  var field = getField(groundMaterial);
   scene.add( field );
 
   ball = getBall();
   scene.add( ball );
+
   var mass = 1, radius = 0.05;
   var sphereShape = new CANNON.Sphere(radius); // Step 1
-  sphereBody = new CANNON.RigidBody(mass,sphereShape); // Step 2
-  sphereBody.position.set(0,0,0.05);
-  sphereBody.velocity.set(2,0,0);
-  sphereBody.linearDamping = 0.01;
+  sphereBody = new CANNON.RigidBody(mass, sphereShape, groundMaterial); // Step 2
+  sphereBody.position.set(0,0,1 /*0.05*/);
+  sphereBody.velocity.set(1,0,0);
+  sphereBody.linearDamping = 0.1;
   world.add(sphereBody); // Step 3
 
   var ambientLight = new THREE.AmbientLight(0x404040);
@@ -95,6 +114,7 @@ function init() {
     stats.domElement.style.top = '0px';
 
     document.body.appendChild( stats.domElement );
+    render(); // warm it up?
     animate();
   }
 }
@@ -112,7 +132,7 @@ function animate() {
 
   /* This will be a problem for laggy games */
   var delta = clock.getDelta();
-  if(delta < 0.2) // smooth it out :P
+  if(delta < 0.1) // smooth it out :P
     world.step(delta);
 
   render();
@@ -151,7 +171,7 @@ function getBall() {
   return object;
 }
 
-function getField() {
+function getField(groundMaterial) {
   var geometry = new THREE.PlaneGeometry(16,9);
 
   var texture = THREE.ImageUtils.loadTexture('images/field.jpg');
@@ -171,7 +191,7 @@ function getField() {
   object.receiveShadow = true;
 
   var groundShape = new CANNON.Plane();
-  var groundBody = new CANNON.RigidBody(0,groundShape);
+  var groundBody = new CANNON.RigidBody(0, groundShape, groundMaterial);
   world.add(groundBody);
 
   return object;
