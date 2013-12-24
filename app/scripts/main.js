@@ -47,8 +47,8 @@ function init() {
 
   var ground_ground_cm = new CANNON.ContactMaterial(groundMaterial, 
                                                     groundMaterial,
-                                                    0.7, // friction coefficient
-                                                    0.5  // restitution
+                                                    1.0, // friction coefficient
+                                                    0.7  // restitution
                                                     );
   // Adjust constraint equation parameters for ground/ground contact
   ground_ground_cm.contactEquationStiffness = 1e8;
@@ -65,12 +65,12 @@ function init() {
   ball = getBall();
   scene.add( ball );
 
-  var mass = 1, radius = 0.05;
+  var mass = 5, radius = 0.05;
   var sphereShape = new CANNON.Sphere(radius); // Step 1
   sphereBody = new CANNON.RigidBody(mass, sphereShape, groundMaterial); // Step 2
   sphereBody.position.set(0,0,1 /*0.05*/);
   sphereBody.velocity.set(1,0,0);
-  sphereBody.linearDamping = 0.1;
+  sphereBody.linearDamping = 0.5;
   world.add(sphereBody); // Step 3
 
   var ambientLight = new THREE.AmbientLight(0x404040);
