@@ -25,17 +25,17 @@ function init() {
     fixedTimeStep: 1 / 60
   });
   scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
-  // scene.fog = new THREE.Fog( 0x777777, 0, 30 );
+  scene.fog = new THREE.Fog( 0x777777, 0, 20 );
 
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
   camera.up = new THREE.Vector3( 0, 0, 1 );
 
   renderer = new THREE.WebGLRenderer();
   /* this will slow down the rendering by half without a GPU */
-  // renderer.shadowMapEnabled = true;
-  // renderer.shadowMapSoft = true;
+  renderer.shadowMapEnabled = true;
+  renderer.shadowMapSoft = true;
+  renderer.shadowMapAutoUpdate = true;
   // renderer.shadowMapDebug = true;
-  // renderer.shadowMapAutoUpdate = true;
   renderer.setSize(getViewportWidth(), getViewportHeight());
   renderer.setClearColor(0x191919, 1);
   document.body.appendChild(renderer.domElement);
@@ -160,7 +160,7 @@ function getField() {
     1.0  // restitution
   );
 
-  var object = new Physijs.PlaneMesh(geometry, material, 100000);
+  var object = new Physijs.PlaneMesh(geometry, material, 10000000);
 
   object.castShadow = false;
   object.receiveShadow = true;
