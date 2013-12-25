@@ -47,9 +47,8 @@ function init() {
   scene.add( field );
 
   ball = getBall();
-  ball.position.z += 1;
   scene.add( ball );
-  ball.applyCentralImpulse(new THREE.Vector3(1, 0, 0).applyProjection(ball.matrix)); // DAMNIT!!!!
+  ball.applyCentralImpulse(new THREE.Vector3(1, 0, 3).applyProjection(ball.matrix)); // DAMNIT!!!!
   // ball.setLinearVelocity(ball.matrix.multiplyVector3(new THREE.Vector3(1, 0, 0)));
 
   var ambientLight = new THREE.AmbientLight(0x404040);
@@ -138,7 +137,7 @@ function getBall() {
     .6   // restitution
   );
 
-  var object = new Physijs.SphereMesh(geometry, material, 5);
+  var object = new Physijs.SphereMesh(geometry, material, 1);
 
   object.position.z += 0.05;
   object.castShadow = true;
