@@ -48,7 +48,8 @@ function init() {
 
   ball = getBall();
   scene.add( ball );
-  ball.applyCentralImpulse(new THREE.Vector3(1, 0, 3).applyProjection(ball.matrix)); // DAMNIT!!!!
+  ball.applyCentralImpulse(new THREE.Vector3(5, 0, 5).applyProjection(ball.matrix)); // DAMNIT!!!!
+  ball.setDamping(0.7, 0.7);
   // ball.setLinearVelocity(ball.matrix.multiplyVector3(new THREE.Vector3(1, 0, 0)));
 
   var ambientLight = new THREE.AmbientLight(0x404040);
@@ -115,9 +116,9 @@ function animate() {
 function render() {
   var timer = Date.now() * 0.0001;
 
-  camera.position.x = Math.cos( timer ) * 5;
+  camera.position.x = -5; // Math.cos( timer ) * 5;
   camera.position.z = 2;
-  camera.position.y = Math.sin( timer ) * 5;
+  // camera.position.y = Math.sin( timer ) * 5;
 
   camera.lookAt( scene.position );
 
