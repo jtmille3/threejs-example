@@ -4,18 +4,14 @@ if ( ! Detector.webgl ) {
   init();
 }
 
-var clock, stats, scene, camera, renderer, world, ball, sphereBody;
+var stats, scene, camera, renderer, world, ball, sphereBody;
 
 function init() {
-  clock = new THREE.Clock(true);
+  Physijs.scripts.worker = '/bower_components/physijs/physijs_worker.js';
+  Physijs.scripts.ammo = '/bower_components/ammo.js/builds/ammo.js';
 
   stats = new Stats();
   stats.setMode(0); // 0: fps, 1: ms
-
-  world = new CANNON.World();
-  world.gravity.set(0,0,-9.82);
-  world.broadphase = new CANNON.NaiveBroadphase();
-  world.solver.iterations = 10;
 
   var projector = new THREE.Projector();
 
@@ -25,7 +21,10 @@ function init() {
       NEAR = 0.1,
       FAR = 1000;
 
-  scene = new THREE.Scene();
+  scene = new Physijs.Scene({
+    fixedTimeStep: 1 / 60
+  });
+  scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
   // scene.fog = new THREE.Fog( 0x777777, 0, 30 );
 
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
@@ -41,35 +40,12 @@ function init() {
   renderer.setClearColor(0x191919, 1);
   document.body.appendChild(renderer.domElement);
 
-  // Materials
-  var groundMaterial = new CANNON.Material("groundMaterial");
-  var groundContactMaterial = new CANNON.ContactMaterial(groundMaterial, 
-                                                    groundMaterial,
-                                                    1.0, // friction coefficient
-                                                    0.7  // restitution
-                                                    );
-  // Adjust constraint equation parameters for ground/ground contact
-  groundContactMaterial.contactEquationStiffness = 1e8;
-  groundContactMaterial.contactEquationRegularizationTime = 5;
-  groundContactMaterial.frictionEquationStiffness = 1e8;
-  groundContactMaterial.frictionEquationRegularizationTime = 5;
-
-  // Add contact material to the world
-  world.addContactMaterial(groundContactMaterial);
-
-  var field = getField(groundMaterial);
+  var field = getField();
   scene.add( field );
 
   ball = getBall();
+  ball.position.z += 1;
   scene.add( ball );
-
-  var mass = 1, radius = 0.05;
-  var sphereShape = new CANNON.Sphere(radius); // Step 1
-  sphereBody = new CANNON.RigidBody(mass, sphereShape, groundMaterial); // Step 2
-  sphereBody.position.set(0,0,1 /*0.05*/);
-  sphereBody.velocity.set(2,0,0);
-  sphereBody.linearDamping = 0.5;
-  world.add(sphereBody); // Step 3
 
   var ambientLight = new THREE.AmbientLight(0x404040);
   scene.add( ambientLight );
@@ -93,7 +69,7 @@ function init() {
     darkGoal.position.y -= 0.62;
     scene.add(darkGoal);
 
-    render();
+    animate();
   });
 
   window.addEventListener('resize', function(e) {
@@ -102,7 +78,7 @@ function init() {
   	camera.aspect = getViewportWidth() / getViewportHeight();
   	camera.updateProjectionMatrix();
 
-  	render();
+  	animate();
   });
 
   window.onload = function() {  
@@ -112,7 +88,6 @@ function init() {
     stats.domElement.style.top = '0px';
 
     document.body.appendChild( stats.domElement );
-    render(); // warm it up?
     animate();
   }
 }
@@ -127,17 +102,13 @@ function getViewportWidth() {
 
 function animate() {
   requestAnimationFrame( animate );
-
-  /* This will be a problem for laggy games */
-  var delta = clock.getDelta();
-  if(delta < 0.1) // smooth it out :P
-    world.step(delta);
-
   render();
   stats.update();
 }
 
 function render() {
+  scene.simulate(); // run physics
+
   var timer = Date.now() * 0.0001;
 
   camera.position.x = Math.cos( timer ) * 5;
@@ -145,9 +116,6 @@ function render() {
   camera.position.y = Math.sin( timer ) * 5;
 
   camera.lookAt( scene.position );
-
-  sphereBody.position.copy(ball.position); // position
-  sphereBody.quaternion.copy(ball.quaternion); // for orientation
 
   renderer.render( scene, camera );
 }
@@ -158,9 +126,14 @@ function getBall() {
   var texture = THREE.ImageUtils.loadTexture('images/ball.jpg');
   texture.anisotropy = renderer.getMaxAnisotropy();
 
-  var material = new THREE.MeshPhongMaterial({map: texture});
+  var material = Physijs.createMaterial(new THREE.MeshPhongMaterial({
+      map: texture
+    }),
+    .2,  // friction
+    .6   // restitution
+  );
 
-  var object = new THREE.Mesh(geometry, material);
+  var object = new Physijs.SphereMesh(geometry, material, 1);
 
   object.position.z += 0.05;
   object.castShadow = true;
@@ -169,28 +142,28 @@ function getBall() {
   return object;
 }
 
-function getField(groundMaterial) {
+function getField() {
   var geometry = new THREE.PlaneGeometry(16,9);
 
   var texture = THREE.ImageUtils.loadTexture('images/field.jpg');
   texture.anisotropy = renderer.getMaxAnisotropy();
 
-  var material = new THREE.MeshPhongMaterial({
-    map: texture,
-    ambient: 0x030303, 
-    specular: 0x00FF00, 
-    shininess: 5, 
-    shading: THREE.FlatShading
-  });
+  var material = new Physijs.createMaterial(
+    new THREE.MeshPhongMaterial({
+      map: texture,
+      ambient: 0x030303, 
+      specular: 0x00FF00, 
+      shininess: 5, 
+      shading: THREE.FlatShading
+    }), 
+    1.0, // friction
+    1.0  // restitution
+  );
 
-  var object = new THREE.Mesh(geometry, material);
+  var object = new Physijs.PlaneMesh(geometry, material, 100000);
 
   object.castShadow = false;
   object.receiveShadow = true;
-
-  var groundShape = new CANNON.Plane();
-  var groundBody = new CANNON.RigidBody(0, groundShape, groundMaterial);
-  world.add(groundBody);
 
   return object;
 }
