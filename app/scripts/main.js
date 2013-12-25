@@ -26,6 +26,9 @@ function init() {
   });
   scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
   scene.fog = new THREE.Fog( 0x777777, 0, 20 );
+  scene.addEventListener('update', function() {
+    scene.simulate( undefined, 2 );
+  });
 
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
   camera.up = new THREE.Vector3( 0, 0, 1 );
@@ -46,6 +49,8 @@ function init() {
   ball = getBall();
   ball.position.z += 1;
   scene.add( ball );
+  ball.applyCentralImpulse(new THREE.Vector3(1, 0, 0).applyProjection(ball.matrix)); // DAMNIT!!!!
+  // ball.setLinearVelocity(ball.matrix.multiplyVector3(new THREE.Vector3(1, 0, 0)));
 
   var ambientLight = new THREE.AmbientLight(0x404040);
   scene.add( ambientLight );
@@ -90,6 +95,8 @@ function init() {
     document.body.appendChild( stats.domElement );
     animate();
   }
+
+  scene.simulate();
 }
 
 function getViewportHeight() {
@@ -107,8 +114,6 @@ function animate() {
 }
 
 function render() {
-  scene.simulate(); // run physics
-
   var timer = Date.now() * 0.0001;
 
   camera.position.x = Math.cos( timer ) * 5;
@@ -129,11 +134,11 @@ function getBall() {
   var material = Physijs.createMaterial(new THREE.MeshPhongMaterial({
       map: texture
     }),
-    .2,  // friction
+    1.0,  // friction
     .6   // restitution
   );
 
-  var object = new Physijs.SphereMesh(geometry, material, 1);
+  var object = new Physijs.SphereMesh(geometry, material, 5);
 
   object.position.z += 0.05;
   object.castShadow = true;
@@ -161,7 +166,6 @@ function getField() {
   );
 
   var object = new Physijs.PlaneMesh(geometry, material, 10000000);
-
   object.castShadow = false;
   object.receiveShadow = true;
 
