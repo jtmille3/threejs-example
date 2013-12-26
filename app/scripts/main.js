@@ -25,7 +25,7 @@ function init() {
     fixedTimeStep: 1 / 60
   });
   scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
-  scene.fog = new THREE.Fog( 0x777777, 0, 20 );
+  // scene.fog = new THREE.Fog( 0x777777, 0, 20 );
   scene.addEventListener('update', function() {
     scene.simulate( undefined, 2 );
     physics_stats.update();
@@ -49,6 +49,15 @@ function init() {
   var field = getField();
   scene.add( field );
 
+  var topBoundary = getBoundary(0, 4.5, 0);
+  scene.add( topBoundary );
+  var bottomBoundary = getBoundary(0, -4.5, 0);
+  scene.add( bottomBoundary );
+  var leftBoundary = getBoundary(8, 0, 90 * Math.PI / 180);
+  scene.add( leftBoundary );
+  var rightBoundary = getBoundary(-8, 0, 90 * Math.PI / 180);
+  scene.add( rightBoundary );
+
   ball = getBall();
   scene.add( ball );
   ball.addEventListener( 'collision', function( other_object, linear_velocity, angular_velocity ) {
@@ -57,7 +66,8 @@ function init() {
       }
   });
   ball.setDamping(0.7, 0.7);
-  ball.applyCentralImpulse(new THREE.Vector3(3, 0, 5).applyProjection(ball.matrix));
+  ball.applyCentralImpulse(new THREE.Vector3(10, 0, 5).applyProjection(ball.matrix)); // goal test
+  // ball.applyCentralImpulse(new THREE.Vector3(20, 20, 0).applyProjection(ball.matrix)); // test ob
 
   var ambientLight = new THREE.AmbientLight(0x404040);
   scene.add( ambientLight );
@@ -131,10 +141,10 @@ function render() {
   var timer = Date.now() * 0.0001;
 
   camera.position.x = ball.position.x + 5; // Math.cos( timer ) * 5;
-  camera.position.z = 2;
+  camera.position.z = 3;
   // camera.position.y = Math.sin( timer ) * 5;
 
-  camera.lookAt( ball.position );
+  camera.lookAt ( ball.position );
 
   renderer.render( scene, camera );
 }
@@ -179,9 +189,33 @@ function getField() {
     1.0  // restitution
   );
 
-  var object = new Physijs.PlaneMesh(geometry, material, 100000000);
+  var object = new Physijs.PlaneMesh(geometry, material, 0);
   object.castShadow = false;
   object.receiveShadow = true;
+
+  return object;
+}
+
+function getBoundary(x, y, y_rotation) {
+  var geometry = new THREE.PlaneGeometry(20,20);
+
+  var material = new Physijs.createMaterial(
+    new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0,
+      wireframe: true
+    }), 
+    1.0, // friction
+    1.0  // restitution
+  );
+
+  var object = new Physijs.BoxMesh(geometry, material, 0);
+  object.castShadow = false;
+  object.receiveShadow = true;
+  object.position.x += x;
+  object.position.y += y;
+  object.rotation.x += 90 * Math.PI / 180;
+  object.rotation.y += y_rotation;
 
   return object;
 }
