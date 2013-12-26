@@ -4,14 +4,14 @@ if ( ! Detector.webgl ) {
   init();
 }
 
-var stats, scene, camera, renderer, world, ball, sphereBody;
+var render_stats, physics_stats, scene, camera, renderer, world, ball, sphereBody;
 
 function init() {
   Physijs.scripts.worker = '/bower_components/physijs/physijs_worker.js';
   Physijs.scripts.ammo = '/bower_components/ammo.js/builds/ammo.js';
 
-  stats = new Stats();
-  stats.setMode(0); // 0: fps, 1: ms
+  render_stats = new Stats();
+  render_stats.setMode(0); // 0: fps, 1: ms
 
   var projector = new THREE.Projector();
 
@@ -28,12 +28,15 @@ function init() {
   scene.fog = new THREE.Fog( 0x777777, 0, 20 );
   scene.addEventListener('update', function() {
     scene.simulate( undefined, 2 );
+    physics_stats.update();
   });
 
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
   camera.up = new THREE.Vector3( 0, 0, 1 );
 
-  renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer({ 
+    antialias: true 
+  });
   /* this will slow down the rendering by half without a GPU */
   renderer.shadowMapEnabled = true;
   renderer.shadowMapSoft = true;
@@ -48,9 +51,13 @@ function init() {
 
   ball = getBall();
   scene.add( ball );
-  ball.applyCentralImpulse(new THREE.Vector3(5, 0, 5).applyProjection(ball.matrix)); // DAMNIT!!!!
+  ball.addEventListener( 'collision', function( other_object, linear_velocity, angular_velocity ) {
+      if(other_object === field) {
+        
+      }
+  });
   ball.setDamping(0.7, 0.7);
-  // ball.setLinearVelocity(ball.matrix.multiplyVector3(new THREE.Vector3(1, 0, 0)));
+  ball.applyCentralImpulse(new THREE.Vector3(3, 0, 5).applyProjection(ball.matrix));
 
   var ambientLight = new THREE.AmbientLight(0x404040);
   scene.add( ambientLight );
@@ -88,11 +95,18 @@ function init() {
 
   window.onload = function() {  
     // Align top-left
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
-    stats.domElement.style.top = '0px';
+    render_stats.domElement.style.position = 'absolute';
+    render_stats.domElement.style.left = '0px';
+    render_stats.domElement.style.top = '0px';
 
-    document.body.appendChild( stats.domElement );
+    document.body.appendChild( render_stats.domElement );
+
+    physics_stats = new Stats();
+    physics_stats.domElement.style.position = 'absolute';
+    physics_stats.domElement.style.top = '50px';
+    physics_stats.domElement.style.zIndex = 100;
+    document.body.appendChild( physics_stats.domElement );
+
     animate();
   }
 
@@ -110,17 +124,17 @@ function getViewportWidth() {
 function animate() {
   requestAnimationFrame( animate );
   render();
-  stats.update();
+  render_stats.update();
 }
 
 function render() {
   var timer = Date.now() * 0.0001;
 
-  camera.position.x = -5; // Math.cos( timer ) * 5;
+  camera.position.x = ball.position.x + 5; // Math.cos( timer ) * 5;
   camera.position.z = 2;
   // camera.position.y = Math.sin( timer ) * 5;
 
-  camera.lookAt( scene.position );
+  camera.lookAt( ball.position );
 
   renderer.render( scene, camera );
 }
@@ -134,7 +148,7 @@ function getBall() {
   var material = Physijs.createMaterial(new THREE.MeshPhongMaterial({
       map: texture
     }),
-    1.0,  // friction
+     1.0,  // friction
     .6   // restitution
   );
 
@@ -158,14 +172,14 @@ function getField() {
       map: texture,
       ambient: 0x030303, 
       specular: 0x00FF00, 
-      shininess: 5, 
+      shininess: 1, 
       shading: THREE.FlatShading
     }), 
     1.0, // friction
     1.0  // restitution
   );
 
-  var object = new Physijs.PlaneMesh(geometry, material, 10000000);
+  var object = new Physijs.PlaneMesh(geometry, material, 100000000);
   object.castShadow = false;
   object.receiveShadow = true;
 
