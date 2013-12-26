@@ -27,7 +27,7 @@ function init() {
   scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
   // scene.fog = new THREE.Fog( 0x777777, 0, 20 );
   scene.addEventListener('update', function() {
-    scene.simulate( undefined, 2 );
+    scene.simulate( undefined, 1 );
     physics_stats.update();
   });
 

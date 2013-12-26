@@ -6,7 +6,8 @@
     "jquery": "~1.10.2",
     "threejs": "",
     "threejs-stats": "",
-    "physijs": ""
+    "physijs": "",
+    "requirejs": "2.1.9"
   },
   "devDependencies": {},
   "resolutions": {
