@@ -24,15 +24,15 @@ define([
 		    object.castShadow = false;
 		    object.receiveShadow = true;
 
-		    this.physijs = object;
-		    scene.add(this.physijs);
+		    this.mesh = object;
+		    scene.add(this.mesh);
 		},
 
 		unload: function(renderer, scene) {
-			scene.remove(this.phyijs);
+			scene.remove(this.mesh);
 		},
 
-		update: function() {
+		update: function(input) {
 			// nothing
 		}
 	});

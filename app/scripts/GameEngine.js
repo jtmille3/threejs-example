@@ -64,7 +64,10 @@ define(function(require) {
         },
 
         draw: function(sceneIndex) {
-            this.scenes[sceneIndex].draw(this.renderer);
+            var scene = this.scenes[sceneIndex];
+
+            this.renderer.render( scene.getScene(), scene.getCamera() );
+            render_stats.update();
         },
 
         update: function(sceneIndex) {

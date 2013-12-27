@@ -21,8 +21,8 @@ define([
 		    object.castShadow = true;
 		    object.receiveShadow = false;
 
-		    this.physijs = object;
-		    scene.add(this.physijs);
+		    this.mesh = object;
+		    scene.add(this.mesh);
 
 		    object.setDamping(0.7, 0.7); // must set after adding to the scene
 		},
@@ -42,7 +42,7 @@ define([
 		},
 
 		kick: function() {
-			this.physijs.applyCentralImpulse(new THREE.Vector3(10, 0, 5).applyProjection(this.physijs.matrix)); // goal test
+			this.mesh.applyCentralImpulse(new THREE.Vector3(10, 0, 5).applyProjection(this.mesh.matrix)); // goal test
     		// ball.applyCentralImpulse(new THREE.Vector3(20, 20, 0).applyProjection(ball.matrix)); // test ob
 		}
 	});
