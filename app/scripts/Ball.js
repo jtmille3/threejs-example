@@ -2,8 +2,12 @@ define([
 	'./Entity'
 ], function(Entity) {
 	return Entity.extend({
+		init: function(options) {
+			this.options = options;
+		},
+
 		load: function(renderer, scene) {
-			var geometry = new THREE.SphereGeometry(0.05,30,30);
+			var geometry = new THREE.SphereGeometry(this.options.radius,30,30);
 
 		    var texture = THREE.ImageUtils.loadTexture('images/ball.jpg');
 		    texture.anisotropy = renderer.getMaxAnisotropy();
@@ -17,7 +21,7 @@ define([
 
 		    var object = new Physijs.SphereMesh(geometry, material, 1);
 
-		    object.position.z += 0.05;
+		    object.position.z += this.options.radius; // offset by radius so it sits on top
 		    object.castShadow = true;
 		    object.receiveShadow = false;
 
@@ -28,7 +32,7 @@ define([
 		},
 
 		unload: function(renderer, scene) {
-			scene.remove(this.phyijs);
+			scene.remove(this.mesh);
 		},
 
 		update: function(input) {
@@ -43,7 +47,7 @@ define([
 
 		kick: function() {
 			this.mesh.applyCentralImpulse(new THREE.Vector3(10, 0, 5).applyProjection(this.mesh.matrix)); // goal test
-    		// ball.applyCentralImpulse(new THREE.Vector3(20, 20, 0).applyProjection(ball.matrix)); // test ob
+    		// this.mesh.applyCentralImpulse(new THREE.Vector3(30, 30, 0).applyProjection(this.mesh.matrix)); // test ob
 		}
 	});
 });

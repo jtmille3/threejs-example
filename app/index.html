@@ -19,7 +19,7 @@
         <!-- endbuild -->
     </head>
     <body>
-        <!--[if lt IE 10]>
+        <!--[if lt IE 11]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
@@ -40,7 +40,6 @@
         <script>
             var debug = window.location.search.indexOf('debug') != -1;
 
-            // soundManager2
             soundManager.setup({
               url: 'bower_components/soundmanager2/swf/',
               flashVersion: 9,
@@ -70,7 +69,7 @@
             document.body.appendChild( physic_stats.domElement );
         </script>
 
-        <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+        <script data-main="scripts/SoccerGame" src="bower_components/requirejs/require.js"></script>
         <!-- endbuild -->
 </body>
 </html>

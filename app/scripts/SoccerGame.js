@@ -1,10 +1,11 @@
-define([
+require([
   './AssetManager',
   './GameEngine',
   './SoccerScene'
 ], function(AssetManager, GameEngine, SoccerScene) {
-  return Class.extend({
-    start: function() {
+    if ( ! Detector.webgl ) {
+      Detector.addGetWebGLMessage();
+    } else {
       var gameEngine = new GameEngine();
       gameEngine.addScene(new SoccerScene());
 
@@ -21,5 +22,4 @@ define([
           gameEngine.selectScene(0);
       });
     }
-  });
 });
