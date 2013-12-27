@@ -21,18 +21,24 @@ define([
 		    object.castShadow = true;
 		    object.receiveShadow = false;
 
-		    object.setDamping(0.7, 0.7);
-
 		    this.physijs = object;
 		    scene.add(this.physijs);
+
+		    object.setDamping(0.7, 0.7); // must set after adding to the scene
 		},
 
 		unload: function(renderer, scene) {
 			scene.remove(this.phyijs);
 		},
 
-		update: function() {
-			// nothing
+		update: function(input) {
+			if(input['click'] && !this.kicked) {
+				this.kick();
+				this.kicked = true;
+				console.log('Kick Me!');
+			} else if (!input['click']) {
+				this.kicked = false;
+			}
 		},
 
 		kick: function() {

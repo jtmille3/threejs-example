@@ -7,6 +7,19 @@ define([
 		init: function() {
 			this._super();
 
+			this.setup();
+		},
+
+		setup: function() {
+			var that = this;
+			window.addEventListener('mousedown', function() {
+				that.input['click'] = true;
+			});
+
+			window.addEventListener('mouseup', function() {
+				that.input['click'] = false;
+			});
+
 			this.scene = new Physijs.Scene({
 		      fixedTimeStep: 1 / 60
 		    });
@@ -49,16 +62,13 @@ define([
     		this.scene.add( ambientLight );
 
 			// add ball and field...
-			var field = new Field();
-			this.addEntity(field);
+			this.field = new Field();
+			this.addEntity(this.field);
 
-			var ball = new Ball();
-			this.addEntity(ball);
+			this.ball = new Ball();
+			this.addEntity(this.ball);
 			
 			this.scene.simulate();
-		},
-
-		update: function() {
 		},
 
 		draw: function(renderer) {
@@ -66,17 +76,19 @@ define([
 
 			// var timer = Date.now() * 0.0001;
 
-		    this.camera.position.x = 5; // Math.cos( timer ) * 5;
+		    this.camera.position.x = this.ball.physijs.position.x + 5; // Math.cos( timer ) * 5;
 		    this.camera.position.z = 3;
 		    // this.camera.position.y = Math.sin( timer ) * 5;
 
-		    this.camera.lookAt ( this.scene.position );
+		    this.camera.lookAt ( this.ball.physijs.position );
 
             renderer.render( this.scene, this.camera );
             render_stats.update();
 		},
 
 		resize: function(renderer) {
+			this._super();
+
 			this.renderer.setSize( window.innerWidth, window.innerHeight );
 
             this.camera.aspect = window.innerWidth / window.innerHeight;

@@ -3,6 +3,7 @@ define([
 	return Class.extend({
 		init: function() {
 			this.entities = [];
+			this.input = [];
 		},
 
 		addEntity: function(entity) {
@@ -28,7 +29,7 @@ define([
                 var entity = this.entities[i];
 
                 if (!entity.remove) {
-                    entity.update();
+                    entity.update(this.input);
                 }
             }
 

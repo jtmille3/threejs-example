@@ -39,10 +39,6 @@ define(function(require) {
             loop();
         },
 
-        input: function() {
-            // each scene has unique input
-        },
-
         start: function() {
             console.log("starting game");
             var that = this;
