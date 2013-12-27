@@ -14,10 +14,10 @@ require([
 
       assets.queueDownload('images/ball.jpg');
       assets.queueDownload('images/field.jpg');
-      assets.queueDownload('images/goal.dae');
-      assets.queueDownload('images/goal/blacknet.png');
-      assets.queueDownload('images/goal/whitenet.png');
-      assets.queueDownload('images/goal/rednet.png');
+      assets.queueDownload('models/goal.dae');
+      assets.queueDownload('models/goal/blacknet.png');
+      assets.queueDownload('models/goal/whitenet.png');
+      assets.queueDownload('models/goal/rednet.png');
       
       // assets.queueSound('thud', 'audio/thud.wav');
       
