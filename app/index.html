@@ -23,23 +23,54 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-
-        <!-- build:js scripts/vendor.js -->
-        <!-- bower:js -->
+        <!-- build:js scripts/main.js -->
         <script src="bower_components/modernizr/modernizr.js"></script>
         <script src="bower_components/threejs/build/three.js"></script>
         <script src="bower_components/threejs-stats/Stats.js"></script>
         <script src="bower_components/physijs/physi.js"></script>
         <script src="bower_components/jquery/jquery.js"></script>
-        <!-- endbower -->
-        <!-- endbuild -->
+        <script src="bower_components/soundmanager2/script/soundmanager2.js"></script>
 
-        <!-- build:js scripts/main.js -->
         <script src="scripts/TrackballControls.js"></script>
         <script src="scripts/TransformControls.js"></script>
         <script src="scripts/ColladaLoader.js"></script>
         <script src="scripts/Detector.js"></script>
-        <script src="scripts/main.js"></script>
+        <script src="scripts/class.js"></script>
+        
+        <script>
+            var debug = window.location.search.indexOf('debug') != -1;
+
+            // soundManager2
+            soundManager.setup({
+              url: 'bower_components/soundmanager2/swf/',
+              flashVersion: 9,
+              debugFlash: false,
+              debugMode: false
+            });
+
+            if(typeof console === "undefined") {
+              console = { log: function() { } };
+            }
+
+            Physijs.scripts.worker = '/bower_components/physijs/physijs_worker.js';
+            Physijs.scripts.ammo = '/bower_components/ammo.js/builds/ammo.js';
+
+            var render_stats = new Stats();
+            render_stats.setMode(0); // 0: fps, 1: ms
+            render_stats.domElement.style.position = 'absolute';
+            render_stats.domElement.style.left = '0px';
+            render_stats.domElement.style.top = '0px';
+            document.body.appendChild( render_stats.domElement );
+
+            var physic_stats = new Stats();
+            physic_stats.setMode(0);
+            physic_stats.domElement.style.position = 'absolute';
+            physic_stats.domElement.style.top = '50px';
+            physic_stats.domElement.style.zIndex = 100;
+            document.body.appendChild( physic_stats.domElement );
+        </script>
+
+        <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
         <!-- endbuild -->
 </body>
 </html>
