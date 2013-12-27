@@ -1,7 +1,7 @@
 require([
-  './AssetManager',
+  './utilities/AssetManager',
   './GameEngine',
-  './SoccerScene'
+  './scenes/SoccerScene'
 ], function(AssetManager, GameEngine, SoccerScene) {
     if ( ! Detector.webgl ) {
       Detector.addGetWebGLMessage();

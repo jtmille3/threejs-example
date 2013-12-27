@@ -1,4 +1,5 @@
-define(function(require) {
+define([
+], function() {
     var requestAnimFrame = (function(){
       return  window.requestAnimationFrame       ||
               window.webkitRequestAnimationFrame ||

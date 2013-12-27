@@ -1,8 +1,8 @@
 define([
 	'./Scene',
-	'./Field',
-	'./Ball',
-	'./Goal'
+	'../entities/Field',
+	'../entities/Ball',
+	'../entities/Goal'
 ], function(Scene, Field, Ball, Goal) {
 	return Scene.extend({
 
