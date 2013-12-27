@@ -68,6 +68,8 @@ define([
 		    });
 			
 			this._super(renderer);
+
+		    this.scene.simulate();
 		},
 
 		unload: function() {
@@ -80,6 +82,7 @@ define([
 		},
 
 		update: function() {
+			this._super();
 			// var timer = Date.now() * 0.0001;
 
 		    this.camera.position.x = this.ball.mesh.position.x + 5; // Math.cos( timer ) * 5;
@@ -89,12 +92,10 @@ define([
 		    this.camera.lookAt ( this.ball.mesh.position );
 		},
 
-		resize: function(renderer) {
+		resize: function(width, height) {
 			this._super();
 
-			this.renderer.setSize( window.innerWidth, window.innerHeight );
-
-            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.aspect = width / height;
             this.camera.updateProjectionMatrix();
 		}
 	});

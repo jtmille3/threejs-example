@@ -32,7 +32,8 @@ define(function(require) {
         },
 
         resize: function() {
-            this.scenes[this.sceneIndex].resize(this.renderer);
+            this.renderer.setSize( window.innerWidth, window.innerHeight );
+            this.scenes[this.sceneIndex].resize(window.innerWidth, window.innerHeight);
         },
 
         load: function() {
@@ -64,6 +65,9 @@ define(function(require) {
         },
 
         draw: function(sceneIndex) {
+            if(this.sceneIndex === undefined)
+                return;
+            
             var scene = this.scenes[sceneIndex];
 
             this.renderer.render( scene.getScene(), scene.getCamera() );

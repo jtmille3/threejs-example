@@ -4,7 +4,7 @@ define([
 		init: function() {
 			this.entities = [];
 			this.lights = [];
-			this.scene = null;
+			this.scene =
 			this.camera = null;
 			this.input = [];
 		},
@@ -73,7 +73,7 @@ define([
 			return this.camera;
 		},
 
-		resize: function() {
+		resize: function(width, height) {
 
 		}
 	});
