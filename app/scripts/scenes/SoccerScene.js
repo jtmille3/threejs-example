@@ -102,15 +102,11 @@ define([
 			this._super();
 			// var timer = Date.now() * 0.0001;
 
-		    this.camera.position.x = this.ball.mesh.position.x + 4; // Math.cos( timer ) * 5;
+		    this.camera.position.x = this.ball.mesh.position.x - 2; // Math.cos( timer ) * 5;
 		    this.camera.position.z = 1;
-		    this.camera.position.y = 2;
-		    //this.camera.position.y = 3; // Math.sin( timer ) * 5;
+		    this.camera.position.y = 0; // Math.sin( timer ) * 5;
 
-		    if(this.whiteGoal.mesh)
-		    	this.camera.lookAt ( this.whiteGoal.mesh.position );
-		    else
-		    	this.camera.lookAt ( this.ball.mesh.position );
+	    	this.camera.lookAt ( this.ball.mesh.position );
 		},
 
 		resize: function(width, height) {
