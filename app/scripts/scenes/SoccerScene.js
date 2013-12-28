@@ -60,12 +60,12 @@ define([
 			});
 			this.addEntity(this.whiteGoal);
 
-			this.darkGoal = new Goal({
-				px: -7.6,
-				py: -0.62,
-				rz: 0
-			});
-			this.addEntity(this.darkGoal);
+			// this.darkGoal = new Goal({
+			// 	px: -7.6,
+			// 	py: -0.62,
+			// 	rz: 0
+			// });
+			// this.addEntity(this.darkGoal);
 		},
 
 		load: function(renderer) {
@@ -102,11 +102,15 @@ define([
 			this._super();
 			// var timer = Date.now() * 0.0001;
 
-		    this.camera.position.x = this.ball.mesh.position.x + 2; // Math.cos( timer ) * 5;
+		    this.camera.position.x = this.ball.mesh.position.x + 4; // Math.cos( timer ) * 5;
 		    this.camera.position.z = 1;
+		    this.camera.position.y = 2;
 		    //this.camera.position.y = 3; // Math.sin( timer ) * 5;
 
-		    this.camera.lookAt ( this.ball.mesh.position );
+		    if(this.whiteGoal.mesh)
+		    	this.camera.lookAt ( this.whiteGoal.mesh.position );
+		    else
+		    	this.camera.lookAt ( this.ball.mesh.position );
 		},
 
 		resize: function(width, height) {

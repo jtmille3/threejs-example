@@ -34,10 +34,10 @@ define([
 				rightBoundary.position.y += that.options.py;
 				
 				goal.rotation.z += that.options.rz * Math.PI / 180;
-				topBoundary.rotation.z += that.options.rz * Math.PI / 180;;
-				backBoundary.rotation.z += that.options.rz * Math.PI / 180;;
-				leftBoundary.rotation.z += that.options.rz * Math.PI / 180;;
-				rightBoundary.rotation.z += that.options.rz * Math.PI / 180;;
+				topBoundary.rotation.z += that.options.rz * Math.PI / 180;
+				backBoundary.rotation.z += that.options.rz * Math.PI / 180;
+				leftBoundary.rotation.z += that.options.rz * Math.PI / 180;
+				rightBoundary.rotation.z += that.options.rz * Math.PI / 180;
 
 				that.mesh = goal;
 
@@ -45,7 +45,7 @@ define([
 				scene.add( backBoundary );
 				scene.add( leftBoundary );
 				scene.add( rightBoundary );
-		        scene.add(goal);
+		        // scene.add(goal);
 		    });
 		},
 
