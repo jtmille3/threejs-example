@@ -26,14 +26,17 @@ define([
 			    var leftBoundary = that.getBoundary(0.45, 0.43, 0.45 / 2, 0, 0.43 / 2, -90, 0, 0);
 			    var rightBoundary = that.getBoundary(0.45, 0.43, 0.45 / 2, 1.25, 0.43 / 2, -90, 0, 0);
 
+			    // https://github.com/chandlerprall/Physijs/issues/82
+			    // register ghost collision
 			    var scoreBoundary = that.getBoundary(1.25, 0.43, 0.45 - 0.11, 1.25 / 2, 0.43 / 2, 0, 90, 90);
+			    scoreBoundary._physijs.collision_flags = 4;
 				scoreBoundary.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				    // `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`
-				    if(other_object instanceof Ball) {
+				    if(other_object.entity instanceof Ball) {
 				    	console.log('Goal!!!!');
 				    }
 				});
-				
+
 				var goal = collada.scene;
 				goal.scale.set(goal.scale.x / 6, goal.scale.y / 6, goal.scale.z / 6);
 				

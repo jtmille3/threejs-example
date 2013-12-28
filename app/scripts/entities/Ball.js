@@ -38,6 +38,7 @@ define([
 			// Set the radius of the embedded sphere such that it is smaller than the object
 			this.mesh.setCcdSweptSphereRadius(this.options.radius * 0.2);
 
+			this.mesh.entity = this;
 		    scene.add(this.mesh);
 
 		    object.setDamping(0.7, 0.7); // must set after adding to the scene
