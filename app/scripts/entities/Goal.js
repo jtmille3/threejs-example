@@ -1,6 +1,7 @@
 define([
-	'./Entity'
-], function(Entity) {
+	'./Entity',
+	'./Ball'
+], function(Entity, Ball) {
 	return Entity.extend({
 		init: function(options) {
 			this.options = options;
@@ -25,6 +26,14 @@ define([
 			    var leftBoundary = that.getBoundary(0.45, 0.43, 0.45 / 2, 0, 0.43 / 2, -90, 0, 0);
 			    var rightBoundary = that.getBoundary(0.45, 0.43, 0.45 / 2, 1.25, 0.43 / 2, -90, 0, 0);
 
+			    var scoreBoundary = that.getBoundary(1.25, 0.43, 0.45 - 0.11, 1.25 / 2, 0.43 / 2, 0, 90, 90);
+				scoreBoundary.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+				    // `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`
+				    if(other_object instanceof Ball) {
+				    	console.log('Goal!!!!');
+				    }
+				});
+				
 				var goal = collada.scene;
 				goal.scale.set(goal.scale.x / 6, goal.scale.y / 6, goal.scale.z / 6);
 				
@@ -33,13 +42,17 @@ define([
 				group.add(backBoundary);
 				group.add(leftBoundary);
 				group.add(rightBoundary);
+				group.add(scoreBoundary);
 				
 				group.position.x += that.options.px;
 				group.position.y += that.options.py;
 				group.rotation.z += that.options.rz * Math.PI / 180;
 
+				//group.remove(scoreBoundary);
+
 				that.mesh = group;
 				scene.add(that.mesh);
+				// scene.add(scoreBoundary);
 		    });
 		},
 

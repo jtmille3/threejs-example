@@ -2,9 +2,8 @@ define([
 	'./Scene',
 	'../entities/Field',
 	'../entities/Ball',
-	'../entities/Goal',
-	'../entities/Wall'
-], function(Scene, Field, Ball, Goal, Wall) {
+	'../entities/Goal'
+], function(Scene, Field, Ball, Goal) {
 	return Scene.extend({
 
 		init: function() {
@@ -61,14 +60,12 @@ define([
 			});
 			this.addEntity(this.whiteGoal);
 
-			// this.darkGoal = new Goal({
-			// 	px: -7.6,
-			// 	py: -0.62,
-			// 	rz: 0
-			// });
-			// this.addEntity(this.darkGoal);
-
-			// this.addEntity(new Wall());
+			this.darkGoal = new Goal({
+				px: -7.6,
+				py: -0.62,
+				rz: 0
+			});
+			this.addEntity(this.darkGoal);
 		},
 
 		load: function(renderer) {
@@ -83,7 +80,7 @@ define([
 
 		    var that = this;
 		    this.scene.addEventListener('update', function() {
-		      that.scene.simulate( undefined, 2 );
+		      that.scene.simulate( );
 		      physic_stats.update();
 		    });
 			

@@ -26,6 +26,18 @@ define([
 		    object.receiveShadow = false;
 
 		    this.mesh = object;
+
+		    /*
+		    	http://www.bulletphysics.org/mediawiki-1.5.8/index.php/Anti_tunneling_by_Motion_Clamping
+				When an object has a high velocity, collisions can be missed if it moves through and past other objects between simulation steps. 
+				To fix this, enable CCD motion clamping. For a cube of size 1 try:
+		    */
+			// Enable CCD if the object moves more than 1 meter in one simulation frame
+			// this.mesh.setCcdMotionThreshold(1);
+
+			// Set the radius of the embedded sphere such that it is smaller than the object
+			this.mesh.setCcdSweptSphereRadius(this.options.radius * 0.2);
+
 		    scene.add(this.mesh);
 
 		    object.setDamping(0.7, 0.7); // must set after adding to the scene
@@ -46,7 +58,7 @@ define([
 		},
 
 		kick: function() {
-			this.mesh.applyCentralImpulse(new THREE.Vector3(13, 0, 1).applyProjection(this.mesh.matrix)); // goal test
+			this.mesh.applyCentralImpulse(new THREE.Vector3(10, 0, 1).applyProjection(this.mesh.matrix)); // goal test
     		// this.mesh.applyCentralImpulse(new THREE.Vector3(30, 30, 0).applyProjection(this.mesh.matrix)); // test ob
 		}
 	});
