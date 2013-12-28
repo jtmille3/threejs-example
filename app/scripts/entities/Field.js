@@ -3,6 +3,14 @@ define([
 ], function(Entity) {
 	return Entity.extend({
 		load: function(renderer, scene) {
+			var group = new Physijs.BoxMesh( 
+						new THREE.CubeGeometry( 0.0, 0.0, 0.0 ), 
+						new THREE.MeshBasicMaterial({ 
+							transparent: true, 
+							opacity: 0.0 
+						}) 
+					);
+
 			var geometry = new THREE.PlaneGeometry(16,9);
 
 		    var texture = THREE.ImageUtils.loadTexture('images/field.jpg');
@@ -25,17 +33,18 @@ define([
 		    object.receiveShadow = true;
 
 		    this.mesh = object;
-		    scene.add(this.mesh);
+		    group.add(this.mesh);
 
 		    var topBoundary = this.getBoundary(20, 20, 0, 4.5, 0, 90, 0, 0);
-		    scene.add( topBoundary );
+		    group.add( topBoundary );
 		    var bottomBoundary = this.getBoundary(20, 20, 0, -4.5, 0, 90, 0, 0);
-		    scene.add( bottomBoundary );
+		    group.add( bottomBoundary );
 		    var leftBoundary = this.getBoundary(20, 20, 8, 0, 0, 90, 90, 0);
-		    scene.add( leftBoundary );
+		    group.add( leftBoundary );
 		    var rightBoundary = this.getBoundary(20, 20, -8, 0, 0, 90, 90, 0);
-		    scene.add( rightBoundary );
-		    
+		    group.add( rightBoundary );
+
+		    scene.add(group);
 		},
 
 		unload: function(renderer, scene) {
