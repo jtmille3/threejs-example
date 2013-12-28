@@ -2,8 +2,9 @@ define([
 	'./Scene',
 	'../entities/Field',
 	'../entities/Ball',
-	'../entities/Goal'
-], function(Scene, Field, Ball, Goal) {
+	'../entities/Goal',
+	'../entities/Wall'
+], function(Scene, Field, Ball, Goal, Wall) {
 	return Scene.extend({
 
 		init: function() {
@@ -12,8 +13,8 @@ define([
 			// set some camera attributes
 		    var VIEW_ANGLE = 45,
 		        ASPECT = window.innerWidth / window.innerHeight,
-		        NEAR = 0.1,
-		        FAR = 1000;
+		        NEAR = 0.01,
+		        FAR = 2000;
 
 		    this.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 		    this.camera.up = new THREE.Vector3( 0, 0, 1 );
@@ -66,6 +67,8 @@ define([
 			// 	rz: 0
 			// });
 			// this.addEntity(this.darkGoal);
+
+			// this.addEntity(new Wall());
 		},
 
 		load: function(renderer) {
@@ -104,7 +107,7 @@ define([
 
 		    this.camera.position.x = this.ball.mesh.position.x - 2; // Math.cos( timer ) * 5;
 		    this.camera.position.z = 1;
-		    this.camera.position.y = 0; // Math.sin( timer ) * 5;
+		    this.camera.position.y = 1; // Math.sin( timer ) * 5;
 
 	    	this.camera.lookAt ( this.ball.mesh.position );
 		},

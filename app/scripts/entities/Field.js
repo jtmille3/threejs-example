@@ -35,6 +35,7 @@ define([
 		    scene.add( leftBoundary );
 		    var rightBoundary = this.getBoundary(20, 20, -8, 0, 0, 90, 90, 0);
 		    scene.add( rightBoundary );
+		    
 		},
 
 		unload: function(renderer, scene) {

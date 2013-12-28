@@ -22,16 +22,15 @@ define([
 				var goal = collada.scene;
 				goal.scale.set(goal.scale.x / 6, goal.scale.y / 6, goal.scale.z / 6);
 				
-				// group.add(goal);
 				group.add(topBoundary);
 				group.add(backBoundary);
 				group.add(leftBoundary);
 				group.add(rightBoundary);
-
+				
 				group.position.x += that.options.px;
 				group.position.y += that.options.py;
 				group.rotation.z += that.options.rz * Math.PI / 180;
-				
+
 				that.mesh = group;
 				scene.add(that.mesh);
 		    });

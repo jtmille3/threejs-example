@@ -25,10 +25,11 @@ define([
 
 		    var material = new Physijs.createMaterial(
 		      new THREE.MeshNormalMaterial({
-		        transparent: true,
+		        transparent: false,
 		        opacity: 0.2,
 		        color: 0x505050,
-		        wireframe: false
+		        wireframe: false,
+		        side: THREE.DoubleSide
 		      }), 
 		      1.0, // friction
 		      1.0  // restitution
