@@ -104,7 +104,7 @@ define([
 
 		    this.camera.position.x = this.ball.mesh.position.x + 2; // Math.cos( timer ) * 5;
 		    this.camera.position.z = 1;
-		    // this.camera.position.y = Math.sin( timer ) * 5;
+		    //this.camera.position.y = 3; // Math.sin( timer ) * 5;
 
 		    this.camera.lookAt ( this.ball.mesh.position );
 		},

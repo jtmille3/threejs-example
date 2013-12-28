@@ -46,7 +46,7 @@ define([
 		},
 
 		kick: function() {
-			this.mesh.applyCentralImpulse(new THREE.Vector3(10, 0, 5).applyProjection(this.mesh.matrix)); // goal test
+			this.mesh.applyCentralImpulse(new THREE.Vector3(13, 0, 5).applyProjection(this.mesh.matrix)); // goal test
     		// this.mesh.applyCentralImpulse(new THREE.Vector3(30, 30, 0).applyProjection(this.mesh.matrix)); // test ob
 		}
 	});

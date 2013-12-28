@@ -24,9 +24,9 @@ define([
 		    var geometry = new THREE.PlaneGeometry(width, height);
 
 		    var material = new Physijs.createMaterial(
-		      new THREE.MeshBasicMaterial({
+		      new THREE.MeshNormalMaterial({
 		        transparent: true,
-		        opacity: 0.5,
+		        opacity: 0.2,
 		        color: 0x505050,
 		        wireframe: false
 		      }), 
