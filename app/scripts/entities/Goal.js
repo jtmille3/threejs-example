@@ -12,7 +12,13 @@ define([
 			var that = this;
 			
 			colladaLoader.load('models/goal.dae', function (collada) {
-				var group = new THREE.Object3D();
+				var group = new Physijs.BoxMesh( 
+						new THREE.CubeGeometry( 0.0, 0.0, 0.0 ), 
+						new THREE.MeshBasicMaterial({ 
+							transparent: true, 
+							opacity: 0.0 
+						}) 
+					);
 
 				var topBoundary = that.getBoundary(1.25, 0.45, 0.45 / 2, 1.25 / 2, 0.43, 0, 0, 90);
 				var backBoundary = that.getBoundary(1.25, 0.43, 0, 1.25 / 2, 0.43 / 2, 0, 90, 90);
@@ -22,6 +28,7 @@ define([
 				var goal = collada.scene;
 				goal.scale.set(goal.scale.x / 6, goal.scale.y / 6, goal.scale.z / 6);
 				
+				group.add(goal);
 				group.add(topBoundary);
 				group.add(backBoundary);
 				group.add(leftBoundary);
