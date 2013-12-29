@@ -2,8 +2,9 @@ define([
 	'./Scene',
 	'../entities/Field',
 	'../entities/Ball',
-	'../entities/Goal'
-], function(Scene, Field, Ball, Goal) {
+	'../entities/Goal',
+	'../entities/Player'
+], function(Scene, Field, Ball, Goal, Player) {
 	return Scene.extend({
 
 		init: function() {
@@ -66,6 +67,9 @@ define([
 				rz: 0
 			});
 			this.addEntity(this.darkGoal);
+
+			this.player = new Player();
+			this.addEntity(this.player);
 		},
 
 		load: function(renderer) {
@@ -100,11 +104,11 @@ define([
 
 		update: function() {
 			this._super();
-			// var timer = Date.now() * 0.0001;
+			var timer = Date.now() * 0.001;
 
-		    this.camera.position.x = this.ball.mesh.position.x; // Math.cos( timer ) * 5;
+		    this.camera.position.x = Math.cos( timer ) * 3;
 		    this.camera.position.z = 1;
-		    this.camera.position.y = 3; // Math.sin( timer ) * 5;
+		    this.camera.position.y = Math.sin( timer ) * 3;
 
 	    	this.camera.lookAt ( this.ball.mesh.position );
 		},
