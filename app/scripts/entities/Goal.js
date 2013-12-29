@@ -52,7 +52,7 @@ define([
 						}) 
 					);
 				
-				var scoreBoundary = that.getBoundary(1.25, 0.43, 0.45 - 0.11, 1.25 / 2, 0.43 / 2, 0, 90, 90);
+				var scoreBoundary = that.getBoundary(1.25, 0.4, 0.45 - 0.11, 1.25 / 2, 0.4 / 2, 0, 90, 90);
 				this.hitBox.add(scoreBoundary);
 				// https://github.com/chandlerprall/Physijs/issues/82
 			    // register ghost collision
