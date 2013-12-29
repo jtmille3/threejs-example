@@ -80,7 +80,7 @@ define([
 
 		    var that = this;
 		    this.scene.addEventListener('update', function() {
-		      that.scene.simulate( );
+		      that.scene.simulate(undefined, 2);
 		      physic_stats.update();
 		    });
 			
@@ -102,9 +102,9 @@ define([
 			this._super();
 			// var timer = Date.now() * 0.0001;
 
-		    this.camera.position.x = this.ball.mesh.position.x + 2; // Math.cos( timer ) * 5;
+		    this.camera.position.x = this.ball.mesh.position.x; // Math.cos( timer ) * 5;
 		    this.camera.position.z = 1;
-		    this.camera.position.y = 0; // Math.sin( timer ) * 5;
+		    this.camera.position.y = 3; // Math.sin( timer ) * 5;
 
 	    	this.camera.lookAt ( this.ball.mesh.position );
 		},
