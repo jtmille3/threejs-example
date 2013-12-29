@@ -13,10 +13,10 @@ define([
 		    texture.anisotropy = renderer.getMaxAnisotropy();
 
 		    var material = Physijs.createMaterial(new THREE.MeshPhongMaterial({
-		        map: texture
-		      }),
+		          map: texture
+		       }),
 		       1.0,  // friction
-		      .6   // restitution
+		       0.6   // restitution
 		    );
 
 		    var object = new Physijs.SphereMesh(geometry, material, 1);
@@ -36,6 +36,10 @@ define([
 		    object.receiveShadow = false;
 
 		    this.mesh = object;
+			this.mesh.entity = this;
+		    scene.add(this.mesh);
+
+		    object.setDamping(0.7, 0.7); // must set after adding to the scene
 
 		    /*
 		    	http://www.bulletphysics.org/mediawiki-1.5.8/index.php/Anti_tunneling_by_Motion_Clamping
@@ -43,15 +47,10 @@ define([
 				To fix this, enable CCD motion clamping. For a cube of size 1 try:
 		    */
 			// Enable CCD if the object moves more than 1 meter in one simulation frame
-			// this.mesh.setCcdMotionThreshold(1);
+			// this.mesh.setCcdMotionThreshold(20);
 
 			// Set the radius of the embedded sphere such that it is smaller than the object
-			this.mesh.setCcdSweptSphereRadius(this.options.radius * 0.2);
-
-			this.mesh.entity = this;
-		    scene.add(this.mesh);
-
-		    object.setDamping(0.7, 0.7); // must set after adding to the scene
+			// this.mesh.setCcdSweptSphereRadius(0.1);
 		},
 
 		unload: function(renderer, scene) {
@@ -70,7 +69,7 @@ define([
 
 		kick: function() {
 			this.mesh.applyCentralImpulse(new THREE.Vector3(13, 0, 0).applyProjection(this.mesh.matrix)); // goal test
-    		// this.mesh.applyCentralImpulse(new THREE.Vector3(30, 30, 0).applyProjection(this.mesh.matrix)); // test ob
+    		//this.mesh.applyCentralImpulse(new THREE.Vector3(15, 15, 0).applyProjection(this.mesh.matrix)); // test ob
 		}
 	});
 });

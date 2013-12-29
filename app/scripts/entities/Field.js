@@ -28,7 +28,7 @@ define([
 		      1.0  // restitution
 		    );
 
-		    var object = new Physijs.PlaneMesh(geometry, material, 0);
+		    var object = new Physijs.BoxMesh(geometry, material, 0);
 		    object.castShadow = false;
 		    object.receiveShadow = true;
 
