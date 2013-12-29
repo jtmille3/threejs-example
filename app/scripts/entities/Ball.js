@@ -22,7 +22,7 @@ define([
 		    var object = new Physijs.SphereMesh(geometry, material, 1);
 
 		    /* Debug purposes only */
-		    var coneGeometry = new THREE.CylinderGeometry( 0, 0.04, 0.08, 8, 1 );
+		    var coneGeometry = new THREE.CylinderGeometry( 0, 0.04, 0.05, 8, 1 );
 			var cone = new THREE.Mesh( coneGeometry, new THREE.MeshBasicMaterial( { color: 0x505050 } ) );
 			cone.position.x += 0.1;
 			cone.rotation.y += 180 * Math.PI / 180;
@@ -69,7 +69,7 @@ define([
 		},
 
 		kick: function() {
-			this.mesh.applyCentralImpulse(new THREE.Vector3(12, 0, 0).applyProjection(this.mesh.matrix)); // goal test
+			this.mesh.applyCentralImpulse(new THREE.Vector3(13, 0, 0).applyProjection(this.mesh.matrix)); // goal test
     		// this.mesh.applyCentralImpulse(new THREE.Vector3(30, 30, 0).applyProjection(this.mesh.matrix)); // test ob
 		}
 	});
