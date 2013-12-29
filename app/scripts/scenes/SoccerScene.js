@@ -19,7 +19,7 @@ define([
 		    this.camera.up = new THREE.Vector3( 0, 0, 1 );
 
 			this.scene = new Physijs.Scene({
-		      fixedTimeStep: 1 / 60
+		      // fixedTimeStep: 1 / 120
 		    });
 		    this.scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
 		    // this.Scene.fog = new THREE.Fog( 0x777777, 0, 20 );
@@ -103,7 +103,7 @@ define([
 			// var timer = Date.now() * 0.0001;
 
 		    this.camera.position.x = this.ball.mesh.position.x - 2; // Math.cos( timer ) * 5;
-		    this.camera.position.z = 1;
+		    this.camera.position.z = 2;
 		    this.camera.position.y = 0; // Math.sin( timer ) * 5;
 
 	    	this.camera.lookAt ( this.ball.mesh.position );
