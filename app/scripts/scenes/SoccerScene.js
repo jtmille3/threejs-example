@@ -19,7 +19,7 @@ define([
 		    this.camera.up = new THREE.Vector3( 0, 0, 1 );
 
 			this.scene = new Physijs.Scene({
-		      fixedTimeStep: 1 / 240
+		      fixedTimeStep: 1 / 180
 		    });
 		    this.scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
 		    // this.Scene.fog = new THREE.Fog( 0x777777, 0, 20 );
