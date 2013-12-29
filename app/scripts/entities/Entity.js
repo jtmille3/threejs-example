@@ -22,7 +22,8 @@ define([
 
 		getBoundary: function(width, height, px, py, pz, rx, ry, rz) {
 		    var geometry = new THREE.PlaneGeometry(width, height);
-
+		    geometry.computeFaceNormals();
+			geometry.computeVertexNormals();
 		    var material = new Physijs.createMaterial(
 		      new THREE.MeshNormalMaterial({
 		        transparent: true,
