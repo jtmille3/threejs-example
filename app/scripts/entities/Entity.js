@@ -27,7 +27,7 @@ define([
 		    var material = new Physijs.createMaterial(
 		      new THREE.MeshNormalMaterial({
 		        transparent: true,
-		        opacity: 0.5,
+		        opacity: 0.0,
 		        color: 0x505050,
 		        wireframe: false,
 		        side: THREE.DoubleSide

@@ -3,8 +3,9 @@ define([
 	'../entities/Field',
 	'../entities/Ball',
 	'../entities/Goal',
-	'../entities/Player'
-], function(Scene, Field, Ball, Goal, Player) {
+	'../entities/Player',
+	'../entities/Sky'
+], function(Scene, Field, Ball, Goal, Player, Sky) {
 	return Scene.extend({
 
 		init: function() {
@@ -45,6 +46,9 @@ define([
 		    var ambientLight = new THREE.AmbientLight(0x404040);
     		this.addLight( ambientLight );
 
+    		this.sky = new Sky();
+	        this.addEntity(this.sky);
+
     		// add ball and field...
 			this.field = new Field();
 			this.addEntity(this.field);
@@ -68,8 +72,8 @@ define([
 			});
 			this.addEntity(this.darkGoal);
 
-			this.player = new Player();
-			this.addEntity(this.player);
+			//this.player = new Player();
+			//this.addEntity(this.player);
 		},
 
 		load: function(renderer) {
@@ -104,11 +108,11 @@ define([
 
 		update: function() {
 			this._super();
-			var timer = Date.now() * 0.001;
+			var timer = Date.now() * 0.0005;
 
-		    this.camera.position.x = Math.cos( timer ) * 3;
+		    this.camera.position.x = 4; // Math.cos( timer ) * 3;
 		    this.camera.position.z = 1;
-		    this.camera.position.y = Math.sin( timer ) * 3;
+		    this.camera.position.y = 0; // Math.sin( timer ) * 3;
 
 	    	this.camera.lookAt ( this.ball.mesh.position );
 		},
