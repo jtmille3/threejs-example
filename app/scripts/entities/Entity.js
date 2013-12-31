@@ -3,6 +3,7 @@ define([
 	return Class.extend({
 		init: function() {
 			this.remove = false;
+			this.sceneObjects = [];
 		},
 
 		load: function(renderer) {

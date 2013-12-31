@@ -11,14 +11,30 @@ define([
 						}) 
 					);
 
-			var geometry = new THREE.PlaneGeometry(16,9);
+			// var floorGeometry = new THREE.PlaneGeometry(1600,900);
+			// var floorTexture = new THREE.ImageUtils.loadTexture( 'images/dirt_tx.png' );
+			// floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+			// floorTexture.repeat.x = 1;
+   //          floorTexture.repeat.y = 1;
+   //          floorTexture.offset.x = 0;
+   //          floorTexture.offset.y = 0;
+   //          floorTexture.needsUpdate = true;
+			// var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
 
-		    var texture = THREE.ImageUtils.loadTexture('images/field.jpg');
-		    texture.anisotropy = renderer.getMaxAnisotropy();
+			// var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+			// //floor.scale.x = floor.scale.y = floor.scale.z = 0.01;
+			// floor.position.z += -0.01;
+			// // floor.rotation.x = Math.PI / 2;
+			// group.add(floor);
 
-		    var material = new Physijs.createMaterial(
+			var fieldGeometry = new THREE.PlaneGeometry(16,9);
+
+		    var fieldTexture = THREE.ImageUtils.loadTexture('images/field.jpg');
+		    fieldTexture.anisotropy = renderer.getMaxAnisotropy();
+
+		    var fieldMaterial = new Physijs.createMaterial(
 		      new THREE.MeshPhongMaterial({
-		        map: texture,
+		        map: fieldTexture,
 		        ambient: 0x030303, 
 		        specular: 0x00FF00, 
 		        shininess: 1, 
@@ -28,12 +44,12 @@ define([
 		      1.0  // restitution
 		    );
 
-		    var object = new Physijs.BoxMesh(geometry, material, 0);
-		    object.castShadow = false;
-		    object.receiveShadow = true;
+		    var field = new Physijs.BoxMesh(fieldGeometry, fieldMaterial, 0);
+		    // field.position.z += -0.02;
+		    field.castShadow = false;
+		    field.receiveShadow = true;
 
-		    this.mesh = object;
-		    group.add(this.mesh);
+		    group.add(field);
 
 		    var topBoundary = this.getBoundary(40, 40, 0, 4.5, 0, 90, 0, 0);
 		    group.add( topBoundary );
