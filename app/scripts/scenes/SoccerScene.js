@@ -110,9 +110,9 @@ define([
 			this._super();
 			var timer = Date.now() * 0.0005;
 
-		    this.camera.position.x = this.ball.mesh.position.x + 4; // Math.cos( timer ) * 3;
+		    this.camera.position.x = Math.cos( timer ) * 3;
 		    this.camera.position.z = 1;
-		    this.camera.position.y = 0; // Math.sin( timer ) * 3;
+		    this.camera.position.y = Math.sin( timer ) * 3;
 
 	    	this.camera.lookAt ( this.ball.mesh.position );
 		},
